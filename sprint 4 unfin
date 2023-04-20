@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <typeinfo>
 
 using namespace std;
 
@@ -57,15 +58,15 @@ int main() {
 
     short* n;
     n = (short*)(header + 22);
-    cout << *n << endl; //number of channels
+    cout <<"NumChannels: " << *n << endl;
 
     int* fs;
     fs = (int*)(header + 24);
-    cout << *fs << endl; //Sample rate
+    cout << "Sample Rate: " << *fs << endl;
 
     short* b;
     b = (short*)(header + 28);
-    cout << *b << endl; //byte rate 
+    cout << "Byte Rate: " << *b << endl;
 
     // 1. Beatles.wav 의 헤더파일을 읽는다
     ifstream xx("Beatles.wav", ios::binary | ios::in);
@@ -84,39 +85,42 @@ int main() {
     // 2. 헤더 내용을 바꾼다.
     *n = 1;
     *b = n[0] * fs[0] * sizeof(short); // n[0] = numchannels , fs[0] = Sample Rate
+    
     ifstream music("music.txt");
     music >> num;// num = 6
     cout << num << " notes\n";
+    
+    T = new int[num];
+    a = new float[num];
+    f = new float[num];
+
+    eu = new int[num];
+    ss = new int[num];
+    hh = new char[num];
+    
     for (int i = 0; i < num; i++) {
-
-        T = new int[num];
-        a = new float[num];
-        f = new float[num];
-
-        eu = new int[num];
-        ss = new int[num];
-        hh = new char[num];
-        
-
-        cout << num << " notes\n";
         music >> eu[i] >> hh[i] >> ss[i];
-        cout << "eu[" << i << "] : " << eu[i] << ", hh[" << i << "] : " << hh[i] <<  ", ss[" << i << "] : " << ss[i] << endl;
-
+        cout << "eu[" << i << "] : " << eu[i] << ", hh[" << i << "] : " << hh[i] << ", ss[" << i << "] : " << ss[i] << endl;
+        cout << "Type of hh[" << i << "] is: " << typeid(hh[i]).name() << endl;
         f[i] = getfrequency(hh); // 주파수 int pointer 입력값으로 받음
         a[i] = getamplitude(ss); // 진폭 char pointer 입력값으로 받음
         T[i] = getlength(eu); // 주기 int pointer 입력값으로 받음
         float dt = 1. / fs[0];  // dt = 1/ 총 샘플링 횟수
         // sample_num[i] = T * fs[0];
         my_data[i] = (short)(a[i] * sin(2.0 * pi * f[i] * dt)); // sizeof(short) * num = 2 num bytes 만큼 써짐
+        cout << "a[" << i << "] :" << a[i] << endl;
+        cout << "f[" << i << "] :" << f[i] << endl;
+        cout << "my_data[" << i << "] :" << my_data[i] << endl;
+    }
 
 
     // 수정된 header를 출력파일에 쓴다.
         ofstream xxx("my3.wav", ios::binary | ios::out);
         if (!xxx) return 666;
-        xxx.write(header, 44 * sizeof(char));
-        xxx.write((char*)my_data, (*fs) * sizeof(short));
+        xxx.write(header, 44 * sizeof(char)); // 44 bytes
+        xxx.write((char*)my_data, (*fs) * sizeof(short)); // 88200 bytes
         xxx.close();
 
     }
-}
+ //
 
