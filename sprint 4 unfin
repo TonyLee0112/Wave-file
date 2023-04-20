@@ -1,17 +1,31 @@
 #include <iostream>
 #include <fstream>
+
 using namespace std;
 
-float getfrequency(char h) {
+// 음에 따른 주파수 얻는 함수
+float getfrequency(int *h) {
     float freq;
-    if (h == 'E') {
+    if (*h == 'C') {
+        freq = 130.81;
+    }
+    if (*h == 'D') {
+        freq = 146.83;
+    }
+    if (*h == 'E') {
         freq = 164.81;
     }
-    if (h == 'G') {
-        freq = 196;
+    if (*h == 'F') {
+        freq = 174.61;
     }
-    if (h == 'C') {
-        freq = 262;
+    if (*h == 'G') {
+        freq = 196.0;
+    }
+    if (*h == 'A') {
+        freq = 220.0;
+    }
+    if (*h == 'B') {
+        freq = 246.94;
     }
     else {
         freq = 0;
@@ -20,17 +34,19 @@ float getfrequency(char h) {
 
 }
 
-
-float getamplitude(char e) {
+// 볼륨 조절함수 (진폭)
+float getamplitude(char* e) {
     float amplitude;
-    amplitude = e * 1000;
+    amplitude = *e * 1000;
     return amplitude;
 }
-int getlength(int e) {
+
+// 하나의 음표 연주시간 정하기
+int getlength(int*  e) {
     int T;
-    if (e == 4) T = 1.0;
-    else if (e == 8) T = 0.5;
-    else if (e == 16) T = 0.25;
+    if (*e == 4) T = 1.0;
+    else if (*e == 8) T = 0.5;
+    else if (*e == 16) T = 0.25;
     return T;
 }
 
@@ -50,32 +66,47 @@ int main() {
     b = (short*)(header + 28); 
     cout << *b << endl; //byte rate 
 
+    // 1. Beatles.wav 의 헤더파일을 읽는다
     ifstream xx("Beatles.wav", ios::binary | ios::in);
     if (!xx) return 666;
     xx.read(header, 44 * sizeof(char));
     xx.close();
 
     short* my_data = new short[fs[0]];
-    int num, eu, hh, T;
-    char ss;
-    float f, a;
+    int *num, *eu, *hh, *T;
+    char* ss;
+    float *f, *a;
     const float pi = 3.141592;
     int N = fs[0] * 20;
 
+    // 2. 헤더 내용을 바꾼다.
     *n = 1;
-    *b = n[0] * fs[0] * sizeof(short);
+    *b = n[0] * fs[0] * sizeof(short); // n[0] = numchannels , fs[0] = Sample Rate
     ifstream music("music.txt");
-    music >> num;
-    for (int i = 0; i < num; i++) {
-        music >> eu >> hh >> ss;
-        f = getfrequency(hh); // 주파수
-        a = getamplitude(ss); // 진폭
-        T = getlength(eu); // 주기
-        float dt = 1. / fs[0];
-        // sample_num[i] = T * fs[0];
-        my_data[i] = (short)(a * sin(2.0 * pi * f * dt));
-    }
+    music >> *num;// num = 6
+    cout << *num << " notes\n";
+    for (int i = 0; i < *num; i++) {
+        
+        T = new int[*num]; // 
+        a = new float[*num];
+        f = new float[*num];
+        
+        eu = new int[*num];
+        hh = new int[*num];
+        ss = new char[*num];
 
+        cout << *num << " notes\n";
+        music >> eu[i] >> hh[i] >> ss[i];
+
+        f[i] = getfrequency(hh); // 주파수 int pointer 입력값으로 받음
+        a[i] = getamplitude(ss); // 진폭 char pointer 입력값으로 받음
+        T[i] = getlength(eu); // 주기 int pointer 입력값으로 받음
+        float dt = 1. / fs[0];  // dt = 1/ 총 샘플링 횟수
+        // sample_num[i] = T * fs[0];
+        my_data[i] = (short)(a[i] * sin(2.0 * pi * f[i] * dt)); // sizeof(short) * num = 2 num bytes 만큼 써짐
+        
+
+    // 수정된 header를 출력파일에 쓴다.
     ofstream xxx("my3.wav", ios::binary | ios::out);
     if (!xxx) return 666;
     xxx.write(header, 44 * sizeof(char));
@@ -83,3 +114,4 @@ int main() {
     xxx.close();
 
 }
+
