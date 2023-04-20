@@ -102,7 +102,8 @@ int main() {
         music >> eu[i] >> hh[i] >> ss[i];
         cout << "eu[" << i << "] : " << eu[i] << ", hh[" << i << "] : " << hh[i] << ", ss[" << i << "] : " << ss[i] << endl;
         cout << "Type of hh[" << i << "] is: " << typeid(hh[i]).name() << endl;
-        f[i] = getfrequency(hh); // 주파수 int pointer 입력값으로 받음
+        cout << hh + i << endl;
+        f[i] = getfrequency(hh+i); // 주파수 int pointer 입력값으로 받음
         a[i] = getamplitude(ss); // 진폭 char pointer 입력값으로 받음
         T[i] = getlength(eu); // 주기 int pointer 입력값으로 받음
         float dt = 1. / fs[0];  // dt = 1/ 총 샘플링 횟수
