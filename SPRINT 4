@@ -9,29 +9,30 @@ float getfrequency(char* h) {
     const char* st_str1 = "C";
     const char* st_str2 = "D";
     const char* st_str3 = "E";
+
     const char* st_str4 = "F";
     const char* st_str5 = "G";
     const char* st_str6 = "A";
     const char* st_str7 = "B";
-    if (strncmp(h, st_str1, 1) == 0) {
+    if (strncmp(h, st_str1, 1) == 0) { // C(도)
         freq = 130.81;
     }
-    else if (strncmp(h, st_str2, 1) == 0) {
+    else if (strncmp(h, st_str2, 1) == 0) {// D(레)
         freq = 146.83;
     }
-    else if (strncmp(h, st_str3, 1) == 0) {
+    else if (strncmp(h, st_str3, 1) == 0) {// E(미)
         freq = 164.81;
     }
-    else if (strncmp(h, st_str4, 1) == 0) {
+    else if (strncmp(h, st_str4, 1) == 0) {// F(파)
         freq = 174.61;
     }
-    else if (strncmp(h, st_str5, 1) == 0) {
+    else if (strncmp(h, st_str5, 1) == 0) {// G(솔)
         freq = 196.0;
     }
-    else if (strncmp(h, st_str6, 1) == 0) {
+    else if (strncmp(h, st_str6, 1) == 0) {// A(라)
         freq = 220.0;
     }
-    else if (strncmp(h, st_str7, 1) == 0) {
+    else if (strncmp(h, st_str7, 1) == 0) {// B(시)
         freq = 246.94;
     }
     else {
