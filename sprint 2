@@ -33,14 +33,11 @@ int main() {
     for (int i = 0; i < fs[0]; i++) {
         data[i] = (short)(a * sin(2.0 * pi * f * i * dt)); // data 에 내가 만든 값 저장
     }
-    cout << " N = " << N << endl; // N = 샘플수 44100 * 20
-    cout << " data 의 byte size(fs[0]) : " << fs[0] << endl; // fs[0] = 44100
-    cout << " data 의 size? : " << sizeof(data) << endl; // 4 : pointer 니깐
 
     ofstream zz("my2.wav", ios::binary | ios::out);
     if (!zz) return 666;  // 만일 파일이 열리지 않으면 프로그램을 끝낸다. 
     zz.write(header, 44 * sizeof(char)); // 헤더를 쓴다. char = 1 byte
-    zz.write((char*)data, (*fs) * sizeof(short));  // 이 줄을 한번 더 시행하면 2초분량이 된다. zz.write((char*)data, N * sizeof(short)); 왜 이건 안되징
+    zz.write((char*)data, (*fs) * sizeof(short));  // 이 줄을 한번 더 시행하면 2초분량이 된다.
     zz.close();
 
 }
